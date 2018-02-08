@@ -164,10 +164,9 @@ function add(){
         <tr class ='area${num}'>
             <td class='numbers'>Xh00${num}</td>
             <td class='user'>第${num}学生</td>
-            <td><span  onclick='del($(this))' >删除</span><span  onclick='reWrite("area${num-1}")' class='reWriteStyle'>编辑</span></td>
+            <td><span  onclick='del($(this))' >删除</span><span  onclick='reWrite("area${num}")' class='reWriteStyle'>编辑</span></td>
         </tr>
     `
-    console.log(num-1)
     var numLength = $('#table tr').length;
 
     // alert(numLength);
@@ -193,40 +192,32 @@ function del(obj){
 }
 
 //编辑函数
-var nums = 0;
-function reWrite(e){
-    nums++;
-    console.log(e)
+var e= '' ;
+function reWrite(ev){
+    // console.log(ev)
+    e= ev
     $('.mengBan').show();
-    addReWrite(e,nums);
 }
 
 
-function addReWrite(e,nums){
-    $('.ensure').on("click",function(){
-        if($('.studyNum').val()==null || $('.studyNum').val()==''){
-            alert('请输入11位的手机号');
-            return false;
-        }else if($('.useName').val()==null || $('.useName').val()==''){
-            alert('请输入2-4位的汉字');
-            return false;
-        }else{
-            var studyNum = "" + $('.studyNum').val();
-            var user = '我的姓名是' + $('.studyNum').val()+'位';
-           /* console.log(studyNum)
-            console.log(e);
-            e.parent().siblings('.numbers').text(studyNum);
-            e.parent().siblings('.user').text(user);*/
-            /*console.log(nums+'11111')
-            console.log(e+'22222222')
-            console.log($('.area'+nums))*/
-            console.log($('.'+e))
-            $('.'+e).children('.numbers').text(studyNum);
-            $('.'+e).children('.user').text(user);
-        }
-        $('.mengBan').hide();
-    })
-}
+$('.ensure').on("click",function(){
+    if($('.studyNum').val()==null || $('.studyNum').val()==''){
+        alert('请输入11位的手机号');
+        return false;
+    }else if($('.useName').val()==null || $('.useName').val()==''){
+        alert('请输入2-4位的汉字');
+        return false;
+    }else{
+        var studyNum = $('.studyNum').val();
+        var user = $('.useName').val();
+
+        console.log($('.'+e))
+        $('.'+e).children('.numbers').text(studyNum);
+        $('.'+e).children('.user').text(user);
+    }
+    $('.mengBan').hide();
+})
+
 
 
 </script>
