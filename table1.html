@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>单复选选增删</title>
+    <script>
+        // 初始化字体大小rem
+        var fontSize = 0;
+        (function(doc,win){
+          //获取html节点和事件 和屏幕变化改变字体大小
+          const docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function(){
+                const clientWidth = docEl.clientWidth;
+                if(!clientWidth) return;//排除宽度没值
+                if(clientWidth >= 750){
+                  docEl.style.fontSize = '100px';
+                }else{
+                  docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
+                }
+            };
+            function fontSizeFun(){
+                var size = 0;
+                var clientWidth = docEl.clientWidth;
+                if(!clientWidth) return;//排除宽度没值
+                if(clientWidth >= 750){
+                 size = 100;
+                }else{
+                  size = 100 * (clientWidth / 750);
+                }
+                return size;
+            }
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt,recalc,false);
+            doc.addEventListener("DOMContentLoaded",recalc,false);
+            fontSize = fontSizeFun();
+            win.addEventListener(resizeEvt,function(){
+                fontSize=fontSizeFun();
+            },false);
+            doc.addEventListener("DOMContentLoaded",function(){
+                fontSize=fontSizeFun();
+            },false);
+        })(document,window);
+    </script>
+    <style type="text/css" media="screen">
+        *{
+            margin:0;
+            padding:0;
+        }
+        body{
+            font-size:0.16rem;
+        }
+        ul,li{
+            list-style:none;
+        }
+        .reWriteStyle{
+            margin-left:5%;
+        }
+        .firstTr th{
+            color:red;
+        }
+        td{
+           text-align:center;
+        }
+        td span{
+            color:orange;
+        }
+        .mengBan {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            background-color: rgba(0, 0, 0, 0.5);
+            filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr=#40000000, endColorstr=#40000000);
+            top: 0;
+            z-index: 222;
+            display:none;
+        }
+
+/* -------------------------------修改信息------------------------------------ */
+        .mengContent {
+            background: rgb(255, 255, 255);
+            width: 3rem;
+            height: 3.19rem;
+            border-radius: 0.1rem;
+            opacity: 1;
+            margin-top: 19%;
+            margin-left: 17%;
+            z-index: 99999;
+        }
+        .mengContent p{
+            margin-left:35%;
+            padding-top:10%;
+            font-size:0.2rem;
+            color:red;
+        }
+        .reWriteInfor{
+            margin-top:10%;
+            margin-left:15%;
+        }
+         .reWriteInfor li:nth-of-type(2){
+            margin-top:0.1rem;
+        }
+        .reWriteInfor li:last-of-type{
+            margin-top:0.2rem;
+        }
+        .reWriteInfor button{
+            width:0.8rem;
+            font-size:0.16rem;
+            margin-top:10%;
+            margin-left:24%;
+        }
+        .studyNum,.useName{
+            margin-left:0.05rem;
+        }
+    </style>
+</head>
+
+<body>
+    <table border="1" width="50%" id="table">
+        <tr class='firstTr'>
+            <th>手机号</th>
+            <th>姓名</th>
+            <th>操作</th>
+        </tr>
+    </table>
+<input type="button" value="添加一行" onclick="add()" /> <!--在添加按钮上添加点击事件 -->
+<div class="mengBan">
+    <div class="mengContent">
+        <p>修改信息</p>
+        <ul class='reWriteInfor'>
+            <li><label>手机:<input type="text" name="" value="" class='studyNum' placehoder='请输入11位的手机号'></label></li>
+            <li><label>姓名:<input type="text" name="" value="" class='useName' placehoder='请输入2-4位的汉字'></label></li>
+            <li><button class='ensure'>确定</button></li>
+        </ul>
+    </div>
+</div>
+<script src="jquery-2.2.3.js"></script>
+<script type="text/javascript">
+
+window.onload = function(){
+    var tr=$("tr");
+    $('tr').each(function(index, val) {
+        // console.log(index,val)
+        bgcChange(val);
+    });
+// 鼠标移动改变背景,可以通过给每行绑定鼠标移上事件和鼠标移除事件来改变所在行背景色。
+}
+function bgcChange(obj){
+    obj.onmouseover=function(){
+        obj.style.backgroundColor="#f2f2f2";
+    }
+    obj.onmouseout=function(){
+        obj.style.backgroundColor="#fff";
+    }
+}
+
+// 编写一个函数，供添加按钮调用，动态在表格的最后一行添加子节点；
+var num=1;
+var siteRule=new Array();
+function add(){
+    num++;
+    var trContent = `
+        <tr class ='area${num}'>
+            <td class='numbers'>Xh00${num}</td>
+            <td class='user'>第${num}学生</td>
+            <td><span  onclick='del($(this))' >删除</span><span  onclick='reWrite("area${num-1}")' class='reWriteStyle'>编辑</span></td>
+        </tr>
+    `
+    console.log(num-1)
+    var numLength = $('#table tr').length;
+
+    // alert(numLength);
+    if(numLength==1){
+        $('.firstTr').after(trContent);
+    }else{
+        $('#table tr').eq(numLength-1).after(trContent);
+    }
+
+    var tr = $("tr");
+    $('tr').each(function(index, val) {
+        // console.log(index,val)
+        bgcChange(val);
+    });
+
+}
+
+
+// 创建删除函数
+
+function del(obj){
+    obj.parent().parent().remove();
+}
+
+//编辑函数
+var nums = 0;
+function reWrite(e){
+    nums++;
+    console.log(e)
+    $('.mengBan').show();
+    addReWrite(e,nums);
+}
+
+
+function addReWrite(e,nums){
+    $('.ensure').on("click",function(){
+        if($('.studyNum').val()==null || $('.studyNum').val()==''){
+            alert('请输入11位的手机号');
+            return false;
+        }else if($('.useName').val()==null || $('.useName').val()==''){
+            alert('请输入2-4位的汉字');
+            return false;
+        }else{
+            var studyNum = "" + $('.studyNum').val();
+            var user = '我的姓名是' + $('.studyNum').val()+'位';
+           /* console.log(studyNum)
+            console.log(e);
+            e.parent().siblings('.numbers').text(studyNum);
+            e.parent().siblings('.user').text(user);*/
+            /*console.log(nums+'11111')
+            console.log(e+'22222222')
+            console.log($('.area'+nums))*/
+            console.log($('.'+e))
+            $('.'+e).children('.numbers').text(studyNum);
+            $('.'+e).children('.user').text(user);
+        }
+        $('.mengBan').hide();
+    })
+}
+
+
+</script>
+
+</body>
+</html>
